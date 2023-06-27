@@ -79,10 +79,10 @@ $vRUTA_SPARK \
 --properties-file /var/opt/tel_lib/credentials.properties \
 --jars /var/opt/tel_lib/postgresql-42.2.2.jar \
 --master local \
---executor-memory 16G \
---num-executors 4 \
+--executor-memory 32G \
+--num-executors 8 \
 --executor-cores 4 \
---driver-memory 16G \
+--driver-memory 32G \
 $VAL_RUTA/python/otc_t_tuenti_account.py \
 --vFecha_Inicial=$VAL_FEC_INI \
 --vFecha_Final=$VAL_FEC_FIN \
