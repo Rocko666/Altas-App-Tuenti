@@ -94,8 +94,8 @@ echo "Fecha Proceso: $VAL_FIN_MES" 2>&1 &>> $VAL_LOG
 if [ "$ETAPA" = "1" ]; then
 echo "==== Ejecuta archivo spark otc_t_altas_app_tuenti.py que carga informacion a Hive ===="`date '+%Y%m%d%H%M%S'` 2>&1 &>> $VAL_LOG
 $VAL_RUTA_SPARK \
---conf spark.ui.enabled=false \
---conf spark.dynamicAllocation.enabled=false \
+ 
+
 --conf spark.port.maxRetries=100 \
 --master yarn \
 --executor-memory 16G \
@@ -129,8 +129,8 @@ if [ "$ETAPA" = "2" ]; then
 rm -f ${VAL_RUTA}/output/*
 echo "==== Lee tabla de Extractor ALTAS APP TUENTI y genera archivo en ruta output ====" 2>&1 &>> $VAL_LOG
 $VAL_RUTA_SPARK \
---conf spark.ui.enabled=false \
---conf spark.dynamicAllocation.enabled=false \
+ 
+
 --conf spark.port.maxRetries=100 \
 --master yarn \
 --executor-memory 16G \
