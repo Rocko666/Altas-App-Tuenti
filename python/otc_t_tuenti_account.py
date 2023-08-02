@@ -68,8 +68,6 @@ gender,
 birthday,
 {0}
 FROM otc_tuenti.otc_t_tuenti_account 
-WHERE to_char(create_date,'YYYYMMDD')::int>={1}
-AND to_char(create_date,'YYYYMMDD')::int<{2} 
 ) AS otc_t_tuenti_account
 """
 
@@ -87,7 +85,7 @@ df0 = spark.\
     format("jdbc").\
     option("url", vUrl).\
     option("driver", vDriver).\
-    option("dbtable", vSQL.format(vPt_mes,vFecha_Inicial,vFecha_Final)).\
+    option("dbtable", vSQL.format(vPt_mes)).\
     option("user", vUsuario).\
     option("password", vClave).\
     load()
