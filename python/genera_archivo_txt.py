@@ -33,7 +33,7 @@ vSql = """
 SELECT (CASE WHEN fecha_proceso IS NULL THEN '01/01/1990' ELSE 
 concat_ws('/',SUBSTR(fecha_proceso,1,2),SUBSTR(fecha_proceso,4,2),SUBSTR(fecha_proceso,7,4)) END) AS fecha_proceso,
 (CASE WHEN fecha_alta IS NULL THEN '01/01/1990' ELSE concat_ws('/',SUBSTR(date_format(fecha_alta,'yyyy-MM-dd'),9,2),
-SUBSTR(date_format(fecha_alta,'yyyy-MM-dd'),6,2),SUBSTR(date_format(fecha_alta,'yyyy-MM-dd'),1,4)) END) AS fecha_alta,
+SUBSTR(date_format(fecha_alta,'yyyy-MM-dd'),6,2),SUBSTR(date_format(fecha_alta,'yyyy-MM-dd'),1,4)) END) AS fecha_alta_app,
 msisdn,
 id_hash
 FROM {vTabla} 

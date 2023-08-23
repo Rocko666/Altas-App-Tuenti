@@ -73,8 +73,6 @@ echo "Fecha Particion: $VAL_PT_MES" 2>&1 &>> $VAL_LOG
 #PASO 1: REALIZA LA TRANSFERENCIA DE LOS ARCHIVOS DESDE EL SERVIDOR FTP A RUTA LOCAL EN BIGDATA
 echo "==== Ejecuta archivo spark otc_t_tuenti_msisdn_by_account.py que extrae informacion de Postgress a Hive ===="`date '+%Y%m%d%H%M%S'` 2>&1 &>> $VAL_LOG
 $vRUTA_SPARK \
- 
-
 --conf spark.port.maxRetries=100 \
 --properties-file /var/opt/tel_lib/credentials.properties \
 --jars /var/opt/tel_lib/postgresql-42.2.2.jar \

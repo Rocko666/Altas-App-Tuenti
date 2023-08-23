@@ -21,6 +21,8 @@ set -e
 ##############
 ENTIDAD=EXTRALTSAPPTUENTI0020
 
+# sh -x /home/nae105215/RAW/TUENTI/OTC_T_TUENTI_MSISDN_BY_ACCOUNT/bin/OTC_T_TUENTI_MSISDN_BY_ACCOUNT.sh 20230804 && sh -x /home/nae105215/RAW/TUENTI/OTC_T_TUENTI_ACCOUNT/bin/OTC_T_TUENTI_ACCOUNT.sh 20230804 && sh -x /home/nae105215/ALTAS_APP_TUENTI/bin/OTC_T_ALTAS_APP_TUENTI.sh 20230804 
+
 #PARAMETROS QUE RECIBE LA SHELL
 VAL_FECHA_EJEC=$1
 VAL_RUTA=$2
@@ -169,6 +171,8 @@ echo "==== OK - Se procesa la ETAPA 2 con EXITO ===="`date '+%H%M%S'` 2>&1 &>> $
 `mysql -N  <<<"update params set valor='3' where ENTIDAD = '${ENTIDAD}' and parametro = 'ETAPA' ;"`
 fi
 
+vFTP_NOM_ARCHIVO_FORMATO='Extractor_Tuenti_APP_jul.txt'
+
 #CREA FUNCION PARA LA EXPORTACION DEL ARCHIVO A RUTA FTP Y REALIZA LA TRANSFERENCIA
 if [ "$ETAPA" = "3" ]; then
 echo "==== Crea funcion para la exportacion del archivo a ruta FTP ===="`date '+%Y%m%d%H%M%S'` 2>&1 &>> $VAL_LOG
@@ -182,12 +186,14 @@ function exportar()
 		expect "sftp>"
 		send "cd ${VAL_FTP_RUTA}\n"
 		expect "sftp>"
-		send "put $VAL_RUTA_ARCHIVO\n"
+		send "put $VAL_RUTA_ARCHIVO $(basename ${vFTP_NOM_ARCHIVO_FORMATO})\n"
 		expect "sftp>"
 		send "exit\n"
 		interact
 EOF
 }
+# send "put $VAL_RUTA_ARCHIVO\n"
+# send "put $VAL_RUTA_ARCHIVO $(basename ${vFTP_NOM_ARCHIVO_FORMATO})\n"
 
 #REALIZA LA TRANSFERENCIA DEL ARCHIVO TXT A RUTA FTP
 echo  "==== Inicia exportacion del archivo TXT a servidor SFTP ====" 2>&1 &>> $VAL_LOG
