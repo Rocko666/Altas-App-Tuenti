@@ -52,7 +52,7 @@ UPPER(MD5(CONCAT(CONCAT('593',SUBSTRING(msisdn,2,10)),'{vMes}'))) AS id_hash,
 '{vUltimo_dia_mes}' AS fecha_proceso,
 {vMes} AS pt_mes
 FROM {vTabla_tuenti_account} a
-INNER JOIN {vTabla_tuenti_msisdn} b 
+INNER JOIN {vTabla_tuenti_msisdn} b
 ON a.id_account=b.id_account
 WHERE 
 b.pt_mes={vMes} 

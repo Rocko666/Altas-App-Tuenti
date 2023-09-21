@@ -2,7 +2,6 @@
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
-
 import datetime
 import argparse
 from pyspark.sql import SparkSession
@@ -30,11 +29,8 @@ vPt_mes = parametros.vPt_mes
 spark = SparkSession\
     .builder\
     .appName("OTC_T_TUENTI_MSISDN_BY_ACCOUNT")\
-    .config("hive.exec.dynamic.partition", "true") \
     .config("hive.exec.dynamic.partition.mode", "nonstrict") \
     .config("spark.yarn.queue", "reportes") \
-    .config("hive.enforce.bucketing", "false")\
-    .config("hive.enforce.sorting", "false")\
     .master("local")\
     .enableHiveSupport()\
     .getOrCreate()
