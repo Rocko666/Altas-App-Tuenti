@@ -16,19 +16,20 @@ set -e
 ##############
 # VARIABLES #
 ##############
-ENTIDAD=URMMSISDNBY0020
+ENTIDAD=D_URMMSISDNBY0020
 
 #PARAMETROS QUE RECIBE LA SHELL
 VAL_FECHA_EJEC=$1
-VAL_RUTA=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_RUTA';"`
-VAL_ESQUEMA=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_ESQUEMA';"`
-VAL_TABLA=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_TABLA';"`
-VAL_CAMPO_PARTICION=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_CAMPO_PARTICION';"`
-
-#PARAMETROS GENERICOS
-VAL_COLA_EJECUCION=`mysql -N  <<<"select valor from params where ENTIDAD = 'PARAM_BEELINE' AND parametro = 'VAL_COLA_EJECUCION';"`
-VAL_CADENA_JDBC=`mysql -N  <<<"select valor from params where ENTIDAD = 'PARAM_BEELINE' AND parametro = 'VAL_CADENA_JDBC';"`
-VAL_USUARIO=`mysql -N  <<<"select valor from params where ENTIDAD = 'PARAM_BEELINE' AND parametro = 'VAL_USER';"`
+VAL_RUTA=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_RUTA';"`
+VAL_ESQUEMA=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_ESQUEMA';"`
+VAL_TABLA=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_TABLA';"`
+VAL_CAMPO_PARTICION=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_CAMPO_PARTICION';"`
+VAL_MASTER=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_MASTER';"`
+VAL_DRIVER_MEMORY=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_DRIVER_MEMORY';"`
+VAL_EXECUTOR_MEMORY=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_EXECUTOR_MEMORY';"`
+VAL_NUM_EXECUTORS=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_NUM_EXECUTORS';"`
+VAL_NUM_EXECUTORS_CORES=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_NUM_EXECUTORS_CORES';"`
+VAL_QUEUE=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_QUEUE';"`
 
 #PARAMETROS CALCULADOS Y AUTOGENERADOS
 VAL_FEC_AYER=`date -d "${VAL_FECHA_EJEC} -1 day"  +"%Y%m%d"`
@@ -43,8 +44,8 @@ VAL_LOG=$VAL_RUTA/log/OTC_T_TUENTI_MSISDN_BY_ACCOUNT_$VAL_DIA$VAL_HORA.log
 ##########################################################################################
 echo `date '+%Y-%m-%d %H:%M:%S'`" INFO: Parametros del SPARK GENERICO" 
 ##########################################################################################
-vRUTA_SPARK=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_RUTA_SPARK';"`
-VAL_KINIT=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_KINIT';"`
+VAL_RUTA_SPARK=`mysql -N  <<<"select valor from params_des where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_RUTA_SPARK';"`
+VAL_KINIT=`mysql -N  <<<"select valor from params_des where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_KINIT';"`
 $VAL_KINIT
 
 #VALIDACION DE PARAMETROS INICIALES
@@ -72,20 +73,27 @@ echo "Fecha Particion: $VAL_PT_MES" 2>&1 &>> $VAL_LOG
 
 #PASO 1: REALIZA LA TRANSFERENCIA DE LOS ARCHIVOS DESDE EL SERVIDOR FTP A RUTA LOCAL EN BIGDATA
 echo "==== Ejecuta archivo spark otc_t_tuenti_msisdn_by_account.py que extrae informacion de Postgress a Hive ===="`date '+%Y%m%d%H%M%S'` 2>&1 &>> $VAL_LOG
-$vRUTA_SPARK \
+$VAL_RUTA_SPARK \
 --conf spark.port.maxRetries=100 \
+--queue $VAL_QUEUE \
 --properties-file /var/opt/tel_lib/credentials.properties \
 --jars /var/opt/tel_lib/postgresql-42.2.2.jar \
---master local \
---executor-memory 16G \
---num-executors 4 \
---executor-cores 4 \
---driver-memory 16G \
+--name $ENTIDAD \
+--master $VAL_MASTER \
+--driver-memory $VAL_DRIVER_MEMORY \
+--executor-memory $VAL_EXECUTOR_MEMORY \
+--num-executors $VAL_NUM_EXECUTORS \
+--executor-cores $VAL_EXECUTOR_CORES \
 $VAL_RUTA/python/otc_t_tuenti_msisdn_by_account.py \
 --vFecha_Inicial=$VAL_FEC_INI \
 --vFecha_Final=$VAL_FEC_FIN \
 --vParticion=$VAL_CAMPO_PARTICION \
 --bd=$VAL_BD \
+--vHost=$VAL_HOST \
+--vPort=$VAL_PORT \
+--vDataBase=$VAL_DB \
+--vDriver=$VAL_DRIVER \
+--vUsuario=$VAL_USUARIO \
 --vPt_mes=$VAL_PT_MES 2>&1 &>> $VAL_LOG
 
 #VALIDA EJECUCION DEL ARCHIVO SPARK

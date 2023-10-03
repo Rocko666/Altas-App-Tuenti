@@ -9,6 +9,9 @@ import time
 from pyspark.sql import functions as F
 from pyspark.sql import HiveContext
 import base64
+sys.path.insert(1, '/var/opt/tel_spark')
+from messages import *
+from functions import *
 
 desde = time.time()
 
@@ -19,19 +22,26 @@ parser.add_argument('--vFecha_Final', required=True, type=str)
 parser.add_argument('--vParticion', required=True, type=str)
 parser.add_argument('--bd', required=True, type=str)
 parser.add_argument('--vPt_mes', required=True, type=int)
+parser.add_argument('--vHost', required=True, type=str)
+parser.add_argument('--vPort', required=True, type=str)
+parser.add_argument('--vDataBase', required=True, type=str)
+parser.add_argument('--vDriver', required=True, type=str)
+parser.add_argument('--vUsuario', required=True, type=str)
 parametros = parser.parse_args()
 vFecha_Inicial = parametros.vFecha_Inicial
 vFecha_Final = parametros.vFecha_Final
 vParticion = parametros.vParticion
 bd = parametros.bd
 vPt_mes = parametros.vPt_mes
+vHost=parametros.vHost
+vPort=parametros.vPort
+vDataBase=parametros.vDataBase
+vDriver=parametros.vDriver
+vUsuario=parametros.vUsuario
 
 spark = SparkSession\
     .builder\
-    .appName("OTC_T_TUENTI_ACCOUNT")\
     .config("hive.exec.dynamic.partition.mode", "nonstrict") \
-    .config("spark.yarn.queue", "reportes") \
-    .master("local")\
     .enableHiveSupport()\
     .getOrCreate()
 sc = spark.sparkContext
@@ -67,14 +77,8 @@ FROM otc_tuenti.otc_t_tuenti_account
 ) AS otc_t_tuenti_account
 """
 
-vHost="10.112.152.230"
-vPort="5432"
-vDataBase="otc_tuenti"
 vUrl="jdbc:postgresql://{0}:{1}/{2}".format(vHost,vPort,vDataBase)
-vClass="org.postgresql.Driver"
-vUsuario="NABPTNTI001"
 vClave=base64.b64decode(spark.conf.get("spark.jdbc.tuenti.bpassword"))
-vDriver="org.postgresql.Driver"
 
 df0 = spark.\
     read.\
@@ -87,7 +91,6 @@ df0 = spark.\
     load()
 
 df0.printSchema()
-#df0.show(10)
 
 timestart_tbl = datetime.datetime.now()
 print ("==== Guardando los datos en tabla "+bd+" ====")
@@ -95,7 +98,6 @@ query_truncate = "ALTER TABLE "+bd+" DROP IF EXISTS PARTITION ("+vParticion+" = 
 hc=HiveContext(spark)
 hc.sql(query_truncate)
 df0.repartition(1).write.mode("append").insertInto(bd)
-df0.printSchema()
 timeend_tbl = datetime.datetime.now()
 duracion_tbl = timeend_tbl - timestart_tbl
 print("Escritura Exitosa de la tabla "+bd+" particion "+str(vParticion))

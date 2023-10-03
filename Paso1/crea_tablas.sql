@@ -68,3 +68,5 @@ SELECT * FROM db_desarrollo2021.otc_t_tuenti_msisdn_by_account;
 INSERT INTO db_reportes.otc_t_altas_app_tuenti PARTITION(pt_mes)
 SELECT * FROM db_desarrollo2021.otc_t_altas_app_tuenti;
 
+
+

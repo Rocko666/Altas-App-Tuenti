@@ -31,14 +31,7 @@ bd = parametros.bd
 
 spark = SparkSession\
     .builder\
-    .appName("ALTAS_APP_TUENTI")\
-        .config("spark.sql.broadcastTimeout", "36000") \
-        .config("hive.exec.dynamic.partition", "true") \
-        .config("hive.exec.dynamic.partition.mode", "nonstrict") \
-        .config("spark.yarn.queue", "reportes") \
-        .config("hive.enforce.bucketing", "false")\
-	    .config("hive.enforce.sorting", "false")\
-    .master("yarn")\
+    .config("hive.exec.dynamic.partition.mode", "nonstrict") \
     .enableHiveSupport()\
     .getOrCreate()
 sc = spark.sparkContext
