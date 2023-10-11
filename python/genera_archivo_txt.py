@@ -2,10 +2,8 @@ import sys
 reload(sys)
 sys.setdefaultencoding('UTF-8')
 from pyspark.sql import SparkSession
-import pandas as pd
 import datetime
 from pyspark.sql import functions as F, Window
-import re
 import argparse
 from pyspark.sql.functions import *
 
@@ -23,7 +21,6 @@ timestartmain = datetime.datetime.now()
 spark = SparkSession\
 	.builder\
 	.appName("ALTAS_APP_TUENTI")\
-	.master("local")\
 	.enableHiveSupport()\
 	.getOrCreate()
 sc = spark.sparkContext

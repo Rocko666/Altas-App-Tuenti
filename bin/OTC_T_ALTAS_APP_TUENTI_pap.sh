@@ -15,45 +15,41 @@ set -e
 # MODIFICACIONES																						#
 # FECHA  		AUTOR     		DESCRIPCION MOTIVO														#
 # 2023-06-19   Cristian Ortiz  Control errores, estandares cloudera                                     #
-#  2023-10-05   Cristian Ortiz  Cambio de alcance equipo COMISIONES                                     #
+# 2023-10-05   Cristian Ortiz  Cambio de alcance equipo COMISIONES                                      #
 #########################################################################################################
 ##############
 # VARIABLES #
 ##############
-ENTIDAD=D_EXTRALTSAPPTUENTI0020
-
-### new execution 
-# sh -x /home/nae108834/RAW/TUENTI/OTC_T_TUENTI_MSISDN_BY_ACCOUNT/bin/OTC_T_TUENTI_MSISDN_BY_ACCOUNT.sh 20231004 && sh -x /home/nae108834/RAW/TUENTI/OTC_T_TUENTI_ACCOUNT/bin/OTC_T_TUENTI_ACCOUNT.sh 20231004 && sh -x /home/nae108834/RGenerator/reportes/ALTAS_APP_TUENTI/bin/OTC_T_ALTAS_APP_TUENTI.sh 20231004 
+ENTIDAD=EXTRALTSAPPTUENTI0020
 
 #PARAMETROS QUE RECIBE LA SHELL
 VAL_FECHA_EJEC=$1
-#VAL_RUTA=$2
-VAL_RUTA=/home/nae108834/RGenerator/reportes/ALTAS_APP_TUENTI
+VAL_RUTA=$2
 
-#PARAMETROS DEFINIDOS EN LA TABLA params_des
-ETAPA=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'ETAPA';"`
-VAL_SFTP_PUERTO=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_SFTP_PUERTO';"`
-VAL_SFTP_USER=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_SFTP_USER';"`
-VAL_SFTP_HOSTNAME=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_SFTP_HOSTNAME';"`
-VAL_SFTP_PASS=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_SFTP_PASS';"`
-VAL_SFTP_RUTA=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_SFTP_RUTA';"`
-VAL_NOM_ARCHIVO=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_NOM_ARCHIVO';"`
-VAL_ESQUEMA_RAW=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_ESQUEMA_RAW';"`
-VAL_ESQUEMA_HIVE=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_ESQUEMA_HIVE';"`
-VAL_TABLA_RAW_ACCOUNT=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_TABLA_RAW_ACCOUNT';"`
-VAL_TABLA_RAW_MSISDN=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_TABLA_RAW_MSISDN';"`
-VAL_TABLA_TUENTI=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_TABLA_TUENTI';"`
-VAL_CAMPO_PT=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_CAMPO_PT';"`
-VAL_MASTER=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_MASTER';"`
-VAL_DRIVER_MEMORY=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_DRIVER_MEMORY';"`
-VAL_EXECUTOR_MEMORY=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_EXECUTOR_MEMORY';"`
-VAL_NUM_EXECUTORS=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_NUM_EXECUTORS';"`
-VAL_NUM_EXECUTORS_CORES=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_NUM_EXECUTORS_CORES';"`
-VAL_QUEUE=`mysql -N  <<<"select valor from params_des where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_QUEUE';"`
+#PARAMETROS DEFINIDOS EN LA TABLA params
+ETAPA=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'ETAPA';"`
+VAL_SFTP_PUERTO=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_SFTP_PUERTO';"`
+VAL_SFTP_USER=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_SFTP_USER';"`
+VAL_SFTP_HOSTNAME=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_SFTP_HOSTNAME';"`
+VAL_SFTP_PASS=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_SFTP_PASS';"`
+VAL_SFTP_RUTA=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_SFTP_RUTA';"`
+VAL_NOM_ARCHIVO=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_NOM_ARCHIVO';"`
+VAL_ESQUEMA_RAW=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_ESQUEMA_RAW';"`
+VAL_ESQUEMA_HIVE=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_ESQUEMA_HIVE';"`
+VAL_TABLA_RAW_ACCOUNT=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_TABLA_RAW_ACCOUNT';"`
+VAL_TABLA_RAW_MSISDN=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_TABLA_RAW_MSISDN';"`
+VAL_TABLA_TUENTI=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_TABLA_TUENTI';"`
+VAL_CAMPO_PT=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_CAMPO_PT';"`
+VAL_MASTER=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_MASTER';"`
+VAL_DRIVER_MEMORY=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_DRIVER_MEMORY';"`
+VAL_EXECUTOR_MEMORY=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_EXECUTOR_MEMORY';"`
+VAL_NUM_EXECUTORS=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_NUM_EXECUTORS';"`
+VAL_NUM_EXECUTORS_CORES=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_NUM_EXECUTORS_CORES';"`
+VAL_QUEUE=`mysql -N  <<<"select valor from params where ENTIDAD = '"$ENTIDAD"' AND parametro = 'VAL_QUEUE';"`
 
 #PARAMETROS GENERICOS
-VAL_RUTA_SPARK=`mysql -N  <<<"select valor from params_des where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_RUTA_SPARK';"`
-VAL_KINIT=`mysql -N  <<<"select valor from params_des where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_KINIT';"`
+VAL_RUTA_SPARK=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_RUTA_SPARK';"`
+VAL_KINIT=`mysql -N  <<<"select valor from params where ENTIDAD = 'SPARK_GENERICO' AND parametro = 'VAL_KINIT';"`
 $VAL_KINIT
 
 #PARAMETROS CALCULADOS Y AUTOGENERADOS
@@ -139,9 +135,9 @@ if [ $error_spark -eq 0 ];then
 	exit 1
 fi
 ETAPA=2
-#SE REALIZA EL SETEO DE LA ETAPA EN LA TABLA params_des
+#SE REALIZA EL SETEO DE LA ETAPA EN LA TABLA params
 echo "==== OK - Se procesa la ETAPA 1 con EXITO ===="`date '+%H%M%S'` 2>&1 &>> $VAL_LOG
-`mysql -N  <<<"update params_des set valor='2' where ENTIDAD = '${ENTIDAD}' and parametro = 'ETAPA' ;"`
+`mysql -N  <<<"update params set valor='2' where ENTIDAD = '${ENTIDAD}' and parametro = 'ETAPA' ;"`
 fi
 
 #PASO 2: LEE TABLA DE EXTRACTOR ALTAS APP TUENTI Y GENERA ARCHIVO TXT EN RUTA OUTPUT
@@ -183,15 +179,14 @@ cant_reg=`expr $cant_reg + 0`
 			echo "==== ERROR - El archivo TXT no contiene datos para transferir al servidor FTP ====" 2>&1 &>> $VAL_LOG
 			exit 1
 	fi
+
 ETAPA=3
-#SE REALIZA EL SETEO DE LA ETAPA EN LA TABLA params_des
+#SE REALIZA EL SETEO DE LA ETAPA EN LA TABLA params
 echo "==== OK - Se procesa la ETAPA 2 con EXITO ===="`date '+%H%M%S'` 2>&1 &>> $VAL_LOG
-`mysql -N  <<<"update params_des set valor='3' where ENTIDAD = '${ENTIDAD}' and parametro = 'ETAPA' ;"`
+`mysql -N  <<<"update params set valor='3' where ENTIDAD = '${ENTIDAD}' and parametro = 'ETAPA' ;"`
 fi
 
-vFTP_NOM_ARCHIVO_FORMATO='Extractor_Tuenti_APP_test.txt'
-
-#CREA FUNCION PARA LA EXPORTACION DEL ARCHIVO A RUTA FTP Y REALIZA LA TRANSFERENCIA
+#CREA FUNCION PARA LA EXPORTACION DEL ARCHIVO A RUTA SFTP Y REALIZA LA TRANSFERENCIA
 if [ "$ETAPA" = "3" ]; then
 echo "==== Crea funcion para la exportacion del archivo a ruta FTP ===="`date '+%Y%m%d%H%M%S'` 2>&1 &>> $VAL_LOG
 function exportar()
@@ -204,14 +199,12 @@ function exportar()
 		expect "sftp>"
 		send "cd ${VAL_SFTP_RUTA}\n"
 		expect "sftp>"
-		send "put $VAL_RUTA_ARCHIVO $(basename ${vFTP_NOM_ARCHIVO_FORMATO})\n"
+		send "put $VAL_RUTA_ARCHIVO\n"
 		expect "sftp>"
 		send "exit\n"
 		interact
 EOF
 }
-# send "put $VAL_RUTA_ARCHIVO\n"
-# send "put $VAL_RUTA_ARCHIVO $(basename ${vFTP_NOM_ARCHIVO_FORMATO})\n"
 
 #REALIZA LA TRANSFERENCIA DEL ARCHIVO TXT A RUTA FTP
 echo  "==== Inicia exportacion del archivo TXT a servidor SFTP ====" 2>&1 &>> $VAL_LOG
@@ -231,9 +224,9 @@ VAL_ERROR_FTP=`egrep 't be established|Connection timed out|Not connected|syntax
 		else
 		echo "==== OK - La transferencia del archivo TXT al servidor FTP es EXITOSA ===="`date '+%Y%m%d%H%M%S'` 2>&1 &>> $VAL_LOG
 	fi
-#SE REALIZA EL SETEO DE LA ETAPA EN LA TABLA params_des
+#SE REALIZA EL SETEO DE LA ETAPA EN LA TABLA params
 echo "==== OK - Se procesa la ETAPA 3 con EXITO ===="`date '+%H%M%S'` 2>&1 &>> $VAL_LOG
-`mysql -N  <<<"update params_des set valor='1' where ENTIDAD = '${ENTIDAD}' and parametro = 'ETAPA' ;"`
+`mysql -N  <<<"update params set valor='1' where ENTIDAD = '${ENTIDAD}' and parametro = 'ETAPA' ;"`
 fi
 	
 echo "==== Finaliza ejecucion del proceso ALTAS APP TUENTI ===="`date '+%Y%m%d%H%M%S'` 2>&1 &>> $VAL_LOG
